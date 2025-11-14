@@ -198,9 +198,14 @@ result = von_neumann_test(x, alpha=0.05, sim=20000)
 **Reference:** von Neumann, J., Kent, R. H., Bellinson, H. R., & Hart, B. I. (1941). The mean square successive difference. Annals of Mathematical Statistics, 12(2), 153-162.
 
 **Notes:**
-- Tests for randomness using the von Neumann ratio
+- Tests for randomness/autocorrelation using the von Neumann ratio
 - Compares mean square successive difference to variance
-- Expected ratio under null hypothesis is 2.0
+- Expected ratio under null hypothesis is 2.0 (random data)
+  - VN < 2.0: Data is smooth/autocorrelated (consecutive values similar)
+  - VN > 2.0: Data is jumpy/oscillating (consecutive values very different)
+- **Different from other tests**: Detects autocorrelation, not mean shifts
+  - May not reject null hypothesis for data with mean shifts but random variations
+  - Complementary to Pettitt/SNHT/Buishand tests
 - Change point detection via scanning local deviations
 - `avg` field returns `None` (global test without clear segmentation)
 - Requires non-constant data
@@ -267,6 +272,33 @@ data_with_nan = np.array([1, 2, np.nan, 4, 5, np.nan, 7, 8])
 # NaN values automatically removed
 result = snht_test(data_with_nan)
 # Processes: [1, 2, 4, 5, 7, 8]
+```
+
+### Von Neumann Test: When It Differs
+
+```python
+from pyhomogeneity import von_neumann_test, pettitt_test
+
+# Example 1: Mean shift with random variations
+# Other tests detect change, von Neumann may not
+data1 = np.concatenate([
+    np.random.normal(50, 10, 100),
+    np.random.normal(100, 10, 100)  # Mean changes but randomness stays
+])
+vn_result = von_neumann_test(data1)
+pettitt_result = pettitt_test(data1)
+# pettitt_result.h = True (detects mean shift)
+# vn_result.h may be False (variations still random)
+
+# Example 2: Strong trend (autocorrelation)
+# von Neumann detects non-homogeneity
+data2 = np.arange(1, 101)  # Smooth trend
+vn_result = von_neumann_test(data2, sim=1000)
+# vn_result.VN << 2.0 (smooth/autocorrelated)
+# vn_result.h = True (detects non-randomness)
+
+print(f"VN ratio: {vn_result.VN:.2f}")
+print(f"Interpretation: {'Random' if 1.5 < vn_result.VN < 2.5 else 'Non-random'}")
 ```
 
 ---
