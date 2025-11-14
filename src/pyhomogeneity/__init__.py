@@ -11,6 +11,7 @@ from .buishand_range import buishand_range_test
 from .buishand_u import buishand_u_test
 from .pettitt import pettitt_test
 from .snht import snht_test
+from .von_neumann import von_neumann_test
 
 __all__ = [
     "pettitt_test",
@@ -19,6 +20,7 @@ __all__ = [
     "buishand_range_test",
     "buishand_likelihood_ratio_test",
     "buishand_u_test",
+    "von_neumann_test",
 ]
 
 from ._version import get_versions

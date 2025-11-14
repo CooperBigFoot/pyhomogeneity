@@ -2,7 +2,7 @@
 
 ## Overview
 
-This library provides six statistical tests for detecting change points in time series data:
+This library provides seven statistical tests for detecting change points in time series data:
 
 1. Pettitt's test
 2. Standard Normal Homogeneity Test (SNHT)
@@ -10,6 +10,7 @@ This library provides six statistical tests for detecting change points in time 
 4. Buishand's Range test
 5. Buishand's Likelihood Ratio test
 6. Buishand's U test
+7. von Neumann Ratio test
 
 All functions follow the same interface pattern.
 
@@ -183,6 +184,29 @@ result = buishand_u_test(x, alpha=0.05, sim=20000)
 
 ---
 
+### von_neumann_test
+
+```python
+from pyhomogeneity import von_neumann_test
+
+result = von_neumann_test(x, alpha=0.05, sim=20000)
+```
+
+**Return fields:**
+- `h`, `cp`, `p`, `VN`, `avg` (note: `avg` is always `None`)
+
+**Reference:** von Neumann, J., Kent, R. H., Bellinson, H. R., & Hart, B. I. (1941). The mean square successive difference. Annals of Mathematical Statistics, 12(2), 153-162.
+
+**Notes:**
+- Tests for randomness using the von Neumann ratio
+- Compares mean square successive difference to variance
+- Expected ratio under null hypothesis is 2.0
+- Change point detection via scanning local deviations
+- `avg` field returns `None` (global test without clear segmentation)
+- Requires non-constant data
+
+---
+
 ## Usage Examples
 
 ### Basic Usage
@@ -286,6 +310,7 @@ The computational cost is dominated by Monte Carlo simulations when `sim > 0`:
 | Buishand Range | ~0.7 seconds |
 | Buishand U | ~0.8 seconds |
 | Buishand LR | ~0.8 seconds |
+| von Neumann | ~0.8 seconds |
 | SNHT | ~1.3 seconds |
 | Pettitt | ~17 seconds* |
 
@@ -354,4 +379,10 @@ def buishand_u_test(
     alpha: float = 0.05,
     sim: int | None = 20000
 ) -> namedtuple  # Fields: h, cp, p, U, avg
+
+def von_neumann_test(
+    x: list | np.ndarray | pd.Series,
+    alpha: float = 0.05,
+    sim: int | None = 20000
+) -> namedtuple  # Fields: h, cp, p, VN, avg (avg is always None)
 ```
