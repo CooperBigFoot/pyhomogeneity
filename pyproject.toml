@@ -1,10 +1,28 @@
 [project]
 name = "pyhomogeneity"
-version = "0.1.0"
-description = "Add your description here"
+version = "1.1.0"
+description = "A python package for homogeneity test of time series data"
 readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Md. Manjurul Hussain Shourov", email = "mmhs013@gmail.com"}
+]
+keywords = ["homogeneity", "changepoint", "time series", "statistics"]
+classifiers = [
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+    "Development Status :: 5 - Production/Stable"
+]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "jax>=0.8.0",
+    "jaxlib>=0.8.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+]
 
 
 [build-system]
